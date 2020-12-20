@@ -1,0 +1,49 @@
+function movingTarget(input) {
+    let myTargets = input.shift().split(` `).map(Number);
+    let line;
+    let action = {
+        Shoot(arr, index, power) {
+            index = Number(index);
+            power = Number(power);
+            if (index >= 0 && index < arr.length) {
+                arr[index] -= power;
+                if (arr[index] <= 0) {
+                    arr.splice(index, 1);
+                }
+            }
+
+            return arr;
+        },
+        Add(arr, index, value) {
+            index = Number(index);
+            value = Number(value);
+            if (index >= 0 && index < arr.length) {
+                arr.splice(index, 0, value);
+            } else {
+                console.log("Invalid placement!");
+            }
+            return arr;
+        },
+        Strike(arr, index, radius) {
+            index = Number(index);
+            radius = Number(radius);
+            if (index >= 0 && index < arr.length) {
+                let start = index - radius;
+                let end = index + radius;
+                let numElements = 1 + 2 * radius;
+                if (start >= 0 && end < arr.length) {
+                    arr.splice(start, numElements);
+                } else {
+                    console.log("Strike missed!");
+                }
+            }
+            return arr;
+        }
+    };
+    while ((line = input.shift()) !== "End") {
+        let [command, ...params] = line.split(` `);
+        myTargets = action[command](myTargets, ...params);
+
+    }
+    console.log(myTargets.join(`|`));
+}
